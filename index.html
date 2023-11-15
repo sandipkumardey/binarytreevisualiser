@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary Tree Visualizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #tree-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 70vh;
+    }
+
+    .node {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 10px;
+      font-size: 16px;
+    }
+
+    .line {
+      border-top: 2px solid #333;
+      flex-grow: 1;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <label for="node-value">Node Value:</label>
+    <input type="number" id="node-value">
+    <button onclick="addNode()">Add Node</button>
+  </div>
+
+  <div id="tree-container"></div>
+
+  <script>
+    class Node {
+      constructor(value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+      }
+    }
+
+    let root = null;
+    const treeContainer = document.getElementById('tree-container');
+
+    function addNode() {
+      const nodeValueInput = document.getElementById('node-value');
+      const value = parseInt(nodeValueInput.value);
+
+      if (!isNaN(value)) {
+        root = insertNode(root, value);
+        renderTree(root, treeContainer);
+        nodeValueInput.value = '';
+      }
+    }
+
+    function insertNode(root, value) {
+      if (root === null) {
+        return new Node(value);
+      }
+
+      if (value < root.value) {
+        root.left = insertNode(root.left, value);
+      } else {
+        root.right = insertNode(root.right, value);
+      }
+
+      return root;
+    }
+
+    function renderTree(node, container) {
+      container.innerHTML = '';
+      renderNode(node, container);
+    }
+
+    function renderNode(node, container) {
+      if (node !== null) {
+        const nodeElement = document.createElement('div');
+        nodeElement.className = 'node';
+        nodeElement.textContent = node.value;
+
+        container.appendChild(nodeElement);
+
+        if (node.left !== null || node.right !== null) {
+          const lineElement = document.createElement('div');
+          lineElement.className = 'line';
+          container.appendChild(lineElement);
+        }
+
+        renderNode(node.left, container);
+        renderNode(node.right, container);
+      }
+    }
+  </script>
+</body>
+</html>
